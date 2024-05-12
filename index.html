@@ -74,8 +74,7 @@
     }
     document.addEventListener('DOMContentLoaded', function() {
     window.addEventListener('message', function(event) {
-        // 确保消息来自我们期望的源，这里简化处理为'*'，实际应用需精确指定
-        if (event.origin !== '期望的源') return; // 修改为实际的源地址
+        if (event.origin !== 'https://dansmartcloud.github.io') return; // 修改为实际的源地址
         
         var data = event.data;
         if (data.action === 'showToast' && typeof data.message === 'string') {
@@ -84,11 +83,9 @@
     }, false);
 });
  function showToast(message) {
-    console.log("Show Toast function called with message:", message);
+    console.log("Show Toast function called with child message:", message);
     // iframe内的页面代码
-if (window.parent && window.parent.postMessage) {
-    window.parent.postMessage({ action: 'showToast', message: message }, '*'); // '*'表示允许任何源，实际应指定具体源以增加安全性
-}
+
     const toastElement = document.createElement('div');
     toastElement.className = 'toast';
     toastElement.innerHTML = `<div>${message}</div>`;
