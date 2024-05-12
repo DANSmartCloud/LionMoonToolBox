@@ -117,9 +117,6 @@
 function showToast(message) {
     console.log("Show Parent Toast function called with message:", message);
     // iframe内的页面代码
-if (window.parent && window.parent.postMessage) {
-    window.parent.postMessage({ action: 'showToast', message: message }, '*'); // '*'表示允许任何源，实际应指定具体源以增加安全性
-}
     const toastElement = document.createElement('div');
     toastElement.className = 'toast';
     toastElement.innerHTML = `<div>${message}</div>`;
