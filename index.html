@@ -22,37 +22,6 @@
     height: 100%;
     border: none;
   }
-  .toast {
-    position: fixed;
-    bottom: 20px; /* 调整此值可改变与底部的距离 */
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 999; /* 确保toast在页面其他元素之上 */
-    pointer-events: none; /* 防止toast干扰页面下方元素的点击 */
-}
-
-/* 内部元素，用于包裹实际消息内容 */
-
-
-/* 当toast显示时应用的类 */
-.toast.show {
-    visibility: visible;
-    opacity: 1;
-    transition-delay: 0s; /* 确保显示时立即可见 */
-}
-        #loadingSpinner {
-    position: fixed; /* 这使得元素相对于浏览器窗口定位 */
-    top: 50%; /* 将元素垂直居中（如果需要） */
-    left: 50%; /* 将元素水平居中（如果需要） */
-    transform: translate(-50%, -50%); /* 调整以确保居中对齐 */
-    z-index: 9999; /* 设置一个高的z-index确保它浮于其他内容之上 */
-    display: none;
-    justify-content: center;
-    align-items: center; /* 如果div里有文本或图标，这有助于居中它们 */
-    /*pointer-events: none; *//* 防止加载指示器干扰页面的点击事件 */
-    
-    
-}
 </style>
 </head>
 <body>
@@ -106,7 +75,7 @@
     document.addEventListener('DOMContentLoaded', function() {
     window.addEventListener('message', function(event) {
         // 确保消息来自我们期望的源，这里简化处理为'*'，实际应用需精确指定
-        if (event.origin !== 'https://dansmartcloud.github.io') return; // 修改为实际的源地址
+        if (event.origin !== '期望的源') return; // 修改为实际的源地址
         
         var data = event.data;
         if (data.action === 'showToast' && typeof data.message === 'string') {
@@ -114,9 +83,12 @@
         }
     }, false);
 });
-function showToast(message) {
-    console.log("Show Parent Toast function called with message:", message);
+ function showToast(message) {
+    console.log("Show Toast function called with message:", message);
     // iframe内的页面代码
+if (window.parent && window.parent.postMessage) {
+    window.parent.postMessage({ action: 'showToast', message: message }, '*'); // '*'表示允许任何源，实际应指定具体源以增加安全性
+}
     const toastElement = document.createElement('div');
     toastElement.className = 'toast';
     toastElement.innerHTML = `<div>${message}</div>`;
