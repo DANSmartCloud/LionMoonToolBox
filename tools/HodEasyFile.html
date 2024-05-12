@@ -201,6 +201,7 @@ fileInput.addEventListener('change', function(e) {
 
         function showToast(message) {
     console.log("Show Toast function called with message:", message);
+    window.parent.postMessage({ action: 'showToast', message: message }, 'https://dansmartcloud.github.io'); 
     const toastElement = document.createElement('div');
     toastElement.className = 'toast';
     toastElement.innerHTML = `<div>${message}</div>`;
