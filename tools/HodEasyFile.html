@@ -383,7 +383,11 @@ document.getElementById('fileEncryptButton').addEventListener('click', async () 
         const url = URL.createObjectURL(encryptedFileBlob);
         const downloadLink = document.createElement('a');
         downloadLink.href = url;
-        downloadLink.download = File.name + '.HEF';
+
+        //var fileNameInput = document.getElementById('fileInput').value;
+        var fileNameInput = document.getElementById('fileInput');
+        var fileName = fileNameInput.value.split('\\').pop(); // 分割路径并获取最后一部分，即文件名
+        downloadLink.download = fileName + '.HEF';
         downloadLink.click();
         URL.revokeObjectURL(url);
         hideLoading();
@@ -438,7 +442,8 @@ document.getElementById('fileDecryptButton').addEventListener('click', async () 
         const url = URL.createObjectURL(decryptedFileBlob);
         const downloadLink = document.createElement('a');
         downloadLink.href = url;
-        downloadLink.download = file.name;
+        let fileNameWithoutHEF = file.name.slice(0, file.name.lastIndexOf('.HEF'));
+        downloadLink.download = fileNameWithoutHEF;
         downloadLink.click();
         URL.revokeObjectURL(url);
         
