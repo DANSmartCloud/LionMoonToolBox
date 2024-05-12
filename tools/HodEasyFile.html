@@ -383,7 +383,7 @@ document.getElementById('fileEncryptButton').addEventListener('click', async () 
         const url = URL.createObjectURL(encryptedFileBlob);
         const downloadLink = document.createElement('a');
         downloadLink.href = url;
-        downloadLink.download = 'encryptedFile.HEF';
+        downloadLink.download = File.name + '.HEF';
         downloadLink.click();
         URL.revokeObjectURL(url);
         hideLoading();
@@ -438,7 +438,7 @@ document.getElementById('fileDecryptButton').addEventListener('click', async () 
         const url = URL.createObjectURL(decryptedFileBlob);
         const downloadLink = document.createElement('a');
         downloadLink.href = url;
-        downloadLink.download = 'decrypted_' + file.name;
+        downloadLink.download = file.name;
         downloadLink.click();
         URL.revokeObjectURL(url);
         
