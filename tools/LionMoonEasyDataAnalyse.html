@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>禾云信创-LEDA解包</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Microsoft YaHei', 'Segoe UI', Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: url("https://tpapi.haouou.com/drblog/");
+        }
+        .crypto-tool {
+            background-color: rgba(255, 255, 255, 0.629);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            animation: fadeInDown 1s ease-in-out;
+        }
+        textarea, input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            resize: vertical;
+            font-family: 'Microsoft YaHei', 'Segoe UI', Arial, sans-serif;
+        }
+        textarea:focus, input:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+        button {
+            padding: 10px 15px;
+            width: 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s;
+            margin-top: 10px;
+            animation: fadeInUp 1s ease-in-out;
+            font-size: 20px;
+        }
+        button:hover, button:focus {
+            background-color: #0057b3b9;
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+        }
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+       
+       
+        
+        .flex-horizontal {
+            display: flex;
+            justify-content: center;
+            margin-top: 1rem;
+}
+.flex-vertical {
+    display: flex;
+    flex-direction: column; /* 保持垂直方向 */
+    justify-content: space-between; /* 这将均匀分配按钮之间的空间 */
+    align-items: stretch; /* 可选，使按钮填充容器的宽度 */
+    margin-top: 1rem;
+}
+.flex-horizontal button {
+    width: 100%; /* 设置按钮宽度为100%，使其在容器内拉长 */
+    padding: 15px 0; /* 调整按钮的上下内边距以适应长度变化 */
+    margin: 0; /* 移除默认外边距 */
+}
+.decrypt-flex-horizontal {
+            display: flex;
+            justify-content: center;
+            margin-top: 1rem;
+            
+        }
+        .decrypt-flex-horizontal button {
+            width: 100%;
+            padding: 15px 0;
+            margin: 0;
+        }
+        textarea {
+            backdrop-filter: blur(5px);
+            background-color: rgba(255, 255, 255, 0.5);
+            animation: fadeInUp 0.5s ease-in-out;
+        }
+
+
+        .fa-spinner {
+            animation: spin 1s infinite linear;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 定义toast容器的基础样式 */
+
+.toast {
+    position: fixed;
+    bottom: 20px; /* 调整此值可改变与底部的距离 */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 999; /* 确保toast在页面其他元素之上 */
+    pointer-events: none; /* 防止toast干扰页面下方元素的点击 */
+}
+
+/* 内部元素，用于包裹实际消息内容 */
+
+
+/* 当toast显示时应用的类 */
+.toast.show {
+    visibility: visible;
+    opacity: 1;
+    transition-delay: 0s; /* 确保显示时立即可见 */
+}
+        #loadingSpinner {
+    position: fixed; /* 这使得元素相对于浏览器窗口定位 */
+    top: 50%; /* 将元素垂直居中（如果需要） */
+    left: 50%; /* 将元素水平居中（如果需要） */
+    transform: translate(-50%, -50%); /* 调整以确保居中对齐 */
+    z-index: 9999; /* 设置一个高的z-index确保它浮于其他内容之上 */
+    display: none;
+    justify-content: center;
+    align-items: center; /* 如果div里有文本或图标，这有助于居中它们 */
+    /*pointer-events: none; *//* 防止加载指示器干扰页面的点击事件 */
+    
+    
+}
+
+/* 如果需要调整大小或样式，请自定义以下属性 */
+/* 按钮基础样式保持不变 */
+.tooltip-btn {
+    position: relative; /* 添加这行确保tooltip相对定位 */
+}
+.tooltip-btn::before {
+    content: attr(data-tooltip);
+    position: absolute;
+    opacity: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    white-space: nowrap;
+    font-size: 12px;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+    z-index: 1;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+.tooltip-btn:hover::before {
+    opacity: 1;
+    visibility: visible;
+}
+/* 已有的tooltip样式保持不变 */
+
+/* 添加浮动动画的关键帧 */
+@keyframes floatEffect {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+/* 当按钮被点击时应用浮动动画 */
+.tooltip-btn:active {
+    animation: floatEffect 0.2s ease-in-out;
+}
+    </style>
+</head>
+<body>
+    <div class="crypto-tool">
+ 
+        <h2>LEDA数据包解析</h2>
+
+ 
+        <div id="loadingSpinner" class="spinner">
+            <i class="fas fa-spinner fa-pulse"></i>
+        </div>
+        <h3>获取首个XorKey 操作</h3>
+        <div class="flex-horizontal">
+        <textarea id="QGPKGdata" rows="5" placeholder="TXT:Query_Gateway包体数据"></textarea>
+        <div class="flex-vertical" style="width: 20%;">
+            <button id="FirstXorKeyActionButton" class="tooltip-btn" data-tooltip="获取" style="height: 100%;" onclick="FirstXorKeyAction()">▶️</button>
+            <div class="child" style="height: 20px;"></div>
+            <button id="FirstXorKeyCopyButton"  class="tooltip-btn" data-tooltip="复制" style="height: 100%;">📋</button>
+            <div class="child" style="height: 10%;"></div>
+            <button id="FirstXorKeySendButton"  class="tooltip-btn" data-tooltip="发送到16进制解析运算工具" style="height: 100%;">📨</button>
+        </div>
+
+        <textarea id="BS64xorKEYdata" rows="5" placeholder="Base64:xorKEY"></textarea>
+
+    </div>
+    <h3>16进制解析运算工具</h3>
+        <div class="flex-horizontal">
+            <div class="flex-vertical"  style="width: 100%;">
+                <textarea rows="5" id="HexPGTSR" placeholder="HEX:PlayerGetTokenScRsp包体"></textarea>
+                <textarea rows="5" id="hex16xorkey" placeholder="HEX:xorKEY"></textarea>
+                <textarea rows="5" id="hexPKGwithKCPhead" placeholder="HEX:有KCP协议头的其他包体"></textarea>
+            </div>
+            <div class="flex-vertical" style="width: 20%;">
+                <div class="child"></div>
+                <button id="PGTXorActionButton" class="tooltip-btn" data-tooltip="获取">▶️</button>
+                <div class="child"></div>
+                <button id="CommonXorActionButton" class="tooltip-btn" data-tooltip="获取" onclick="CommonXor()">▶️</button>
+                <div class="child"></div>
+            </div>
+            <div class="flex-vertical"  style="width: 100%;">
+                <input type="text" id="hexHeadMagicout" placeholder="HEX:HeadMagic">
+                <input type="text" id="hexCmdIDout" placeholder="HEX:CmdID">
+                <input type="text" id="hexHeadLenout" placeholder="HEX:HeadLen">
+                <input type="text" id="hexBodyLenout" placeholder="HEX:BodyLen">
+                <input type="text" id="hexHeadout" placeholder="HEX:Head">
+                <input type="text" id="hexBodyout" placeholder="HEX:Body">
+                <input type="text" id="hexTailMagicout" placeholder="HEX:TailMagic">
+            </div>
+            <div class="flex-vertical" style="width: 20%;">
+                <button id="HeadMagicCopyButton"  class="tooltip-btn" data-tooltip="复制">📋</button>
+                <button id="CmdIDCopyButton"  class="tooltip-btn" data-tooltip="复制">📋</button>
+                <button id="HeadLenCopyButton"  class="tooltip-btn" data-tooltip="复制">📋</button>
+                <button id="BodyLenCopyButton"  class="tooltip-btn" data-tooltip="复制">📋</button>
+                <button id="HeadCopyButton"  class="tooltip-btn" data-tooltip="复制">📋</button>
+                <button id="BodyCopyButton"  class="tooltip-btn" data-tooltip="复制">📋</button>
+                <button id="TailMagicCopyButton"  class="tooltip-btn" data-tooltip="复制">📋</button>
+            </div>
+            <div class="child" style="width: 1%;"></div>
+            <div class="flex-vertical"  style="width: 20%;">
+                <button id="HeadMagicSendButton"  class="tooltip-btn" data-tooltip="发送到Protobuf工具">📨</button>
+                <button id="CmdIDSendButton"  class="tooltip-btn" data-tooltip="发送到Protobuf工具">📨</button>
+                <button id="HeadLenSendButton"  class="tooltip-btn" data-tooltip="发送到Protobuf工具">📨</button>
+                <button id="BodyLenSendButton"  class="tooltip-btn" data-tooltip="发送到Protobuf工具">📨</button>
+                <button id="HeadSendButton"  class="tooltip-btn" data-tooltip="发送到Protobuf工具">📨</button>
+                <button id="BodySendButton"  class="tooltip-btn" data-tooltip="发送到Protobuf工具" onclick="BodySendtoProtobuf()">📨</button>
+                <button id="TailMagicSendButton"  class="tooltip-btn" data-tooltip="发送到Protobuf工具">📨</button>
+            </div>
+        </div>
+        <h3>Protobuf工具</h3>
+    <textarea id="ProtobufOriginData" rows="5" placeholder="HEX:Protobuf数据"></textarea>
+    <div class="decrypt-flex-horizontal">
+        <div class="flex-vertical">
+            <textarea id="receivedCiphertext" rows="5" placeholder="TXT:Proto文件"></textarea>
+            <div class="flex-horizontal">
+                <button id="ProtofileGetButton"  class="tooltip-btn" data-tooltip="获取">▶️</button>
+                <div class="child" style="width: 2%;"></div>
+                <button id="ProtofileCopyButton"  class="tooltip-btn" data-tooltip="复制">📋</button>
+                <div class="child" style="width: 2%;"></div>
+                <button id="ProtofileDownloadButton"  class="tooltip-btn" data-tooltip="下载">📥</button>
+            </div>
+        </div>
+        <div class="child" style="width: 1%;"></div>
+        <div class="flex-vertical">
+            <textarea id="receivedCiphertext" rows="5" placeholder="Proto结构树形图"></textarea>
+            <div class="flex-horizontal">
+                <button id="PrototreeGetButton"  class="tooltip-btn" data-tooltip="获取">▶️</button>
+                <div class="child" style="width: 2%;"></div>
+                <button id="PrototreeCopyButton"  class="tooltip-btn" data-tooltip="复制">📋</button>
+                <div class="child" style="width: 2%;"></div>
+                <button id="PrototreeDownloadButton"  class="tooltip-btn" data-tooltip="下载">📥</button>
+            </div>
+        </div>
+        <div class="child" style="width: 1%;"></div>
+        <div class="flex-vertical">
+            <textarea id="receivedCiphertext" rows="5" placeholder="Proto结构表单"></textarea>
+            <div class="flex-horizontal">
+                <button id="ProtosheetGetButton"  class="tooltip-btn" data-tooltip="获取">▶️</button>
+                <div class="child" style="width: 2%;"></div>
+                <button id="ProtosheetCopyButton"  class="tooltip-btn" data-tooltip="复制">📋</button>
+                <div class="child" style="width: 2%;"></div>
+                <button id="ProtosheetDownloadButton"  class="tooltip-btn" data-tooltip="下载">📥</button>
+            </div>
+        </div>
+        
+    </div>
+    <h4>从Protobuf解析结果提取数据</h4>
+<div class="flex-horizontal">
+    <input type="text" id="hexInput" placeholder="HEX:CmdID">
+    <button id="GetCmdIDfromProtoResultButton"  class="tooltip-btn" data-tooltip="提取" style="width: 20%;">📤</button>
+    <div class="child" style="width: 1%;"></div>
+    <button id="CopyCmdIDfromProtoResultButton"  class="tooltip-btn" data-tooltip="复制" style="width: 20%;">📋</button>
+    <div class="child" style="width: 2%;"></div>
+    <input type="text" id="hexInput" placeholder="TXT:UID">
+    <button id="GetUIDfromProtoResultButton"  class="tooltip-btn" data-tooltip="提取" style="width: 20%;">📤</button>
+    <div class="child" style="width: 1%;"></div>
+    <button id="CopyUIDfromProtoResultButton"  class="tooltip-btn" data-tooltip="复制" style="width: 20%;">📋</button>
+</div>
+<div class="flex-horizontal">
+    <input type="text" id="hexInput" placeholder="TXT:SecretKeySeed">
+    <button id="GetSKSfromProtoResultButton"  class="tooltip-btn" data-tooltip="提取" style="width: 20%;">📤</button>
+    <div class="child" style="width: 1%;"></div>
+    <button id="CopySKSfromProtoResultButton"  class="tooltip-btn" data-tooltip="复制" style="width: 20%;">📋</button>
+    <div class="child" style="width: 1%;"></div>
+    <button id="SKSSendtoMTButton"  class="tooltip-btn" data-tooltip="发送到梅森伪随机数生成" style="width: 20%;">📨</button>
+</div>
+
+<h3>梅森旋转算法伪随机数推算 MT19937-64</h3>
+<div class="flex-vertical">
+    <input type="text" id="hexInput" placeholder="TXT:Seed">
+    <div class="flex-horizontal">
+        <button id="GetMTrandomNumberButton"  class="tooltip-btn" data-tooltip="获取">▶️</button>
+        <div class="child" style="width:20%;"></div>
+        <button id="GetMTrandomNumberButton512"  class="tooltip-btn" data-tooltip="获取512次并合成">▶️×512</button>
+    </div>
+</div>
+    <textarea id="remoteDecryptedText" rows="5" readonly placeholder="HEX:随机数生成结果"></textarea>
+    <div class="flex-horizontal">
+        <button id="CopyMTresultButton"  class="tooltip-btn" data-tooltip="复制">📋</button>
+        <div class="child" style="width:20%;"></div>
+        <button id="SendMTresultButton"  class="tooltip-btn" data-tooltip="发送到16进制解析运算工具">📨</button>
+    </div>
+    <div class="child" style="height: 10%;"></div>
+    <h3>Protobuf反向解析</h3>
+    <h4>从生成的代码文件反向生成proto文件</h4>
+    <div class="flex-horizontal">
+        <div class="flex-vertical" style="width: 100%;">
+            <textarea id="receivedCiphertext" rows="5" placeholder="TXT:由proto文件生成的Java代码"></textarea>
+            <div class="flex-horizontal">
+                <button id="GetProtoFromJavaButton"  class="tooltip-btn" data-tooltip="获取">▶️</button>
+                <div class="child" style="width: 2%;"></div>
+                <button id="UploadJavaFileButton"  class="tooltip-btn" data-tooltip="上传">📂</button>
+            </div>
+        </div>
+        <div class="child" style="width: 1%;"></div>
+        <div class="flex-vertical" style="width: 100%;">
+            <textarea id="receivedCiphertext" rows="5" placeholder="TXT:由proto文件生成的C#代码"></textarea>
+            <div class="flex-horizontal">
+                <button id="GetProtoFromCSButton"  class="tooltip-btn" data-tooltip="获取">▶️</button>
+                <div class="child" style="width: 2%;"></div>
+                <button id="UploadCSFileButton"  class="tooltip-btn" data-tooltip="上传">📂</button>
+            </div>
+        </div>
+    </div>
+
+<textarea id="receivedCiphertext" rows="5" placeholder="TXT:proto文件"></textarea>
+<div class="child" style="width: 2%;"></div>
+<div class="flex-horizontal">
+    <button id="SourceCodeAnalyseProtoFileDownloadButton"  class="tooltip-btn" data-tooltip="下载" style="width: 100%;">📥</button>
+    <div class="child" style="width: 20%;"></div>
+    <button id="SourceCodeAnalyseProtoCopyButton"  class="tooltip-btn" data-tooltip="复制" style="width: 100%;">📋</button>
+</div>
+
+    <h4>禾云信创-LionMoonEasyDataAnalyse翎曚简易网络数据包解析工具·版本1.0</h4>
+    <h4>云云探索者自研，版权所有，严禁商用！</h4>
+    </div>
+    <script>
+        function showLoading() {
+            document.getElementById('loadingSpinner').style.display = 'block';
+        }
+
+        function hideLoading() {
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            setTimeout(() => {
+                document.getElementById('loadingSpinner').style.display = 'none';
+                setTimeout(() => document.body.removeChild(toastElement), 300);
+            }, 1000);
+
+        }
+
+        function showToast(message) {
+    console.log("Show Toast function called with child message:", message);
+    window.parent.postMessage({ action: 'showToast', message: message }, 'https://dansmartcloud.github.io'); 
+    const toastElement = document.createElement('div');
+    toastElement.className = 'toast';
+    toastElement.innerHTML = `<div>${message}</div>`;
+    toastElement.style.cssText = `
+        position: fixed; /* 固定位置 */
+        bottom: 20px; /* 距离底部的距离 */
+        left: 50%; /* 水平居中 */
+        transform: translateX(-50%); /* 居中调整 */
+        padding: 10px 20px; /* 内边距 */
+        background-color: #1FC5F9; /* 背景色 */
+        color: #fff; /* 文字颜色 */
+        border-radius: 5px; /* 圆角 */
+        z-index: 1000; /* 确保在最上层 */
+        opacity: 0; /* 初始不透明度 */
+        visibility: visible; /* 确保可见 */
+        transition: opacity 0.5s ease; /* 添加过渡效果 */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    `;
+    document.body.appendChild(toastElement);
+
+    // 使用setTimeout来控制显示和隐藏
+    setTimeout(() => {
+        toastElement.style.opacity = '1'; // 使toast逐渐显示
+    }, 50); // 这里可以调整以控制显示的延迟
+
+    setTimeout(() => {
+        toastElement.style.opacity = '0'; // 使toast逐渐隐藏
+        setTimeout(() => {
+            document.body.removeChild(toastElement);
+        }, 300); // 确保隐藏动画完成后移除元素
+    }, 2000); // 2秒后开始隐藏动画
+}
+
+// 示例调用
+showToast('欢迎使用LEDA数据包解析工具!');
+       
+    function decryptedtext() {
+            var copyText = document.getElementById("remoteDecryptedText");
+            copyText.select();
+            document.execCommand("copy");
+            showToast("复制成功");
+        }
+        function hexToBytes(hex) {
+            for (var bytes = [], c = 0; c < hex.length; c += 2)
+                bytes.push(parseInt(hex.substr(c, 2), 16));
+            return bytes;
+        }
+
+        function bytesToHex(bytes) {
+            for (var hex = [], i = 0; i < bytes.length; i++)
+                hex.push((bytes[i] >>> 4).toString(16) + (bytes[i] & 0xF).toString(16));
+            return hex.join('');
+        }
+
+function FirstXorKeyAction() {
+    var inputText = document.getElementById("QGPKGdata").value;
+    var dataBytes = hexToBytes(removeSpaces(inputText));
+    var keyBytes = hexToBytes("Nr1NECFo6gDt5o23Sr1jHhfu3QcCCRY21ctBS3BbWLc=");
+    for (var i = 0; i < dataBytes.length; i++) {
+                dataBytes[i] ^= keyBytes[i % keyBytes.length]; // 循环使用密钥
+            }
+            // 转回十六进制字符串
+            var outputText = bytesToHex(dataBytes);
+    document.getElementById("BS64xorKEYdata").value = outputText;
+    console.log(dataBytes);
+    console.log(inputText);
+    if (inputText.length == 0) {
+        showToast("请输入数据");
+        return;
+    }
+}
+function removeSpaces(str) {
+    return str.replace(/\s+/g, '');
+    showToast("已为您自动移除空格等影响运算结果的符号");
+}
+
+function xorBytes(a, b) {
+    var length = Math.min(a.length, b.length);
+    var result = new Uint8Array(length);
+    for (var i = 0; i < length; i++) {
+        result[i] = a[i] ^ b[i];
+    }
+    return result;
+}
+function CommonXor() {
+    var encryptedDataHexKCP = removeSpaces(document.getElementById('hexPKGwithKCPhead').value);
+    var encryptedDataHex = encryptedDataHexKCP.substring(56, );
+    console.debug(encryptedDataHex);
+    var xorKeyHex = removeSpaces(document.getElementById('hex16xorkey').value);
+
+    if (!encryptedDataHex || !xorKeyHex) {
+        showToast("请同时输入数据与密钥！");
+        return;
+    }
+
+    try {
+        var encryptedDataBytes = hexToBytes(encryptedDataHex);
+        var xorKeyBytes = hexToBytes(xorKeyHex);
+
+        var decryptedBytes = xorBytes(encryptedDataBytes, xorKeyBytes);
+        var decryptedHex = bytesToHex(decryptedBytes);
+
+        document.getElementById('hexHeadMagicout').value =  decryptedHex.substring(0,8);
+        document.getElementById('hexCmdIDout').value =  decryptedHex.substring(8,12);
+        document.getElementById('hexHeadLenout').value =  decryptedHex.substring(12,16);
+        document.getElementById('hexBodyLenout').value =  decryptedHex.substring(16,24);
+        document.getElementById('hexHeadout').value =  decryptedHex.substring(24,24 + 2*hexStringToInt(document.getElementById('hexHeadLenout').value));
+        document.getElementById('hexBodyout').value =  decryptedHex.substring(24 + 2*hexStringToInt(document.getElementById('hexHeadLenout').value), 24 + 2*hexStringToInt(document.getElementById('hexHeadLenout').value) + 2*hexStringToInt(document.getElementById('hexBodyLenout').value));
+        document.getElementById('hexTailMagicout').value =  decryptedHex.substring(24 + 2*hexStringToInt(document.getElementById('hexHeadLenout').value) + 2*hexStringToInt(document.getElementById('hexBodyLenout').value),);
+        if (document.getElementById('hexHeadout').value == ""){
+            showToast("Head长度为0");
+        }
+    } catch (error) {
+        document.getElementById('decryptedData').innerText = "Error during decryption: " + error.message;
+    }
+}
+function hexStringToInt(hexString) {
+    return parseInt(hexString, 16);
+}
+function BodySendtoProtobuf() {
+    document.getElementById('ProtobufOriginData').value =  document.getElementById('hexBodyout').value.replace(/\s+/g, '');
+}
+    </script>
+
+</body>
+</html>
