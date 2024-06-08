@@ -213,6 +213,7 @@
     </style>
 </head>
 <body>
+    <noscript>启用JavaScript后方可正常使用本工具</noscript>
     <div class="crypto-tool">
  
         <h2>LEDA数据包解析</h2>
@@ -221,6 +222,7 @@
         <div id="loadingSpinner" class="spinner">
             <i class="fas fa-spinner fa-pulse"></i>
         </div>
+        
         <h3>获取首个XorKey 操作</h3>
         <div class="flex-horizontal">
         <textarea id="QGPKGdata" rows="5" placeholder="TXT:Query_Gateway包体数据"></textarea>
@@ -229,7 +231,7 @@
             <div class="child" style="height: 20px;"></div>
             <button id="FirstXorKeyCopyButton"  class="tooltip-btn" data-tooltip="复制" style="height: 100%;">📋</button>
             <div class="child" style="height: 10%;"></div>
-            <button id="FirstXorKeySendButton"  class="tooltip-btn" data-tooltip="发送到16进制解析运算工具" style="height: 100%;">📨</button>
+            <button id="FirstXorKeySendButton"  class="tooltip-btn" data-tooltip="发送到16进制解析运算工具" style="height: 100%;" onclick="SendBase64toHEX16()">📨</button>
         </div>
 
         <textarea id="BS64xorKEYdata" rows="5" placeholder="Base64:xorKEY"></textarea>
@@ -315,6 +317,7 @@
         </div>
         
     </div>
+    
     <h4>从Protobuf解析结果提取数据</h4>
 <div class="flex-horizontal">
     <input type="text" id="hexInput" placeholder="HEX:CmdID">
@@ -381,7 +384,12 @@
     <div class="child" style="width: 20%;"></div>
     <button id="SourceCodeAnalyseProtoCopyButton"  class="tooltip-btn" data-tooltip="复制" style="width: 100%;">📋</button>
 </div>
+<h4>Protobuf解析为表单</h4>
+    <script type="module" crossorigin src="static/protobufanalyse/css/index.js"></script>
+    <link rel="stylesheet" crossorigin href="static/protobufanalyse/css/index.css">
+    <div id="root">
 
+    </div>
     <h4>禾云信创-LionMoonEasyDataAnalyse翎曚简易网络数据包解析工具·版本1.0</h4>
     <h4>云云探索者自研，版权所有，严禁商用！</h4>
     </div>
@@ -459,12 +467,12 @@ showToast('欢迎使用LEDA数据包解析工具!');
 function FirstXorKeyAction() {
     var inputText = document.getElementById("QGPKGdata").value;
     var dataBytes = hexToBytes(removeSpaces(inputText));
-    var keyBytes = hexToBytes("Nr1NECFo6gDt5o23Sr1jHhfu3QcCCRY21ctBS3BbWLc=");
+    var keyBytes = hexToBytes("MIIEpAIBAAKCAQEAsJbFp3WcsiojjdQtVnTuvtawL2m4XxK93F6lCnFwcZqUP39txFGGlrogHMqreyawIUN7E5shtwGzigzjW8Ly5CryBJpXP3ehNTqJS7emb+9LlC19Oxa1eQuUQnatgcsd16DPH7kJ5JzN3vXnhvUyk4Qficdmm0uk7FRaNYFi7EJs4xyqFTrp3rDZ0dzBHumlIeK1om7FNt6Nyivgp+UybO7kl0NLFEeSlV4S+7ofitWQsO5xYqKAzSzz+KIRQcxJidGBlZ1JN/g5DPDpx/ztvOWYUlM7TYk6xN3focZpU0kBzAw/rn94yW9z8jpXfzk+MvWzVL/HAcPy4ySwkay0NwIDAQABAoIBADzKWpawbVYEHaM4lLb7oCjAPXzE9zx7djLDvisfLCdfoINPedkoe52ty1o+BtRpWB7LXTY9pFic1FLE5wvyy6zyf8hH3ZsysqNhWFxhh4FnLmx/UGokAir+anaK5mYVJ1vQtxzjlV1HAbQskRyrklKoHDdRFqiFXOwiib97oDNWhD+RxfyGwwJnynZZSXdLbLSiz/QHQNr/+UfkKRBaxt0CfU7mOLZxoy6fNAxHdBcBJPHCyh+aDvEbix7nSncSU8Ju/48YJ8DrglbZsXCYoA5Uz8NMDuaEMgoNWCFQVoEcRkEUoaH7BlWd3UUFRPnDZ1B4BmkrVoRE8a583OqSwakCgYEA19wQUISXtpnmCrEZfbyZ6IwOy8ZCVaVUtbTjVa8UyfNglzzJG3yzcXU3X35v5/HNCHaXbG2qcbQLThnHBA+obW3RDo+Q49V84Zh1fUNH0ONHHuC09kB//gHqzn/4nLf1aJ2O0NrMyrZNsZ0ZKUKQuVCqWjBOmTNUitcc8RpXZ8sCgYEA0W09POM/It7RoVGI+cfbbgSRmzFo9kzSp5lP7iZ81bnvUMabu2nv3OeGc3Pmdh1ZJFRw6iDM6VVbG0uz8g+f8+JT32XdqM7MJAmgfcYfTVBMiVnh330WNkeRrGWqQzB2f2Wr+0vJjU8CAAcOWDh0oNguJ1l1TSyKxqdL8FsA38UCgYEAudt1AJ7psgOYmqQZ+rUlH6FYLAQsoWmVIk75XpE9KRUwmYdw8QXRy2LNpp9K4z7C9wKFJorWMsh+42Q2gzyoHHBtjEf4zPLIb8XBg3UmpKjMV73Kkiy/B4nHDr4I5YdO+iCPEy0RH4kQJFnLjEcQLT9TLgxh4G7d4B2PgdjYYTkCgYEArdgiV2LETCvulBzcuYufqOn9/He9i4cl7p4jbathQQFBmSnkqGQ+Cn/eagQxsKaYEsJNoOxtbNu/7x6eVzeFLawYt38Vy0UuzFN5eC54WXNotTN5fk2VnKU4VYVnGrMmCobZhpbYzoZhQKiazby/g60wUtW9u7xXzqOdM/428YkCgYBwbEOx1RboH8H+fP1CAiF+cqtq4Jrz9IRWPOgcDpt2Usk1rDweWrZxbTRlwIaVc5csIEE2X02fut/TTXr1MoXHa6s2cQrnZYq44488NsO4TAC26hqs/x/HbVOcX13gT26SYngAHHeh7xjWJr/KgIIwvcvgvoVs6lu7a8aLUvrOag==");
     for (var i = 0; i < dataBytes.length; i++) {
                 dataBytes[i] ^= keyBytes[i % keyBytes.length]; // 循环使用密钥
             }
             // 转回十六进制字符串
-            var outputText = bytesToHex(dataBytes);
+            var outputText = BytesToBase64(dataBytes);
     document.getElementById("BS64xorKEYdata").value = outputText;
     console.log(dataBytes);
     console.log(inputText);
@@ -477,7 +485,9 @@ function removeSpaces(str) {
     return str.replace(/\s+/g, '');
     showToast("已为您自动移除空格等影响运算结果的符号");
 }
-
+function BytesToBase64(str){
+    return btoa(String.fromCharCode.apply(null, new Uint8Array(str)));
+}
 function xorBytes(a, b) {
     var length = Math.min(a.length, b.length);
     var result = new Uint8Array(length);
@@ -488,7 +498,7 @@ function xorBytes(a, b) {
 }
 function CommonXor() {
     var encryptedDataHexKCP = removeSpaces(document.getElementById('hexPKGwithKCPhead').value);
-    var encryptedDataHex = encryptedDataHexKCP.substring(56, );
+    var encryptedDataHex = encryptedDataHexKCP.substring(62, );
     console.debug(encryptedDataHex);
     var xorKeyHex = removeSpaces(document.getElementById('hex16xorkey').value);
 
@@ -524,6 +534,33 @@ function hexStringToInt(hexString) {
 function BodySendtoProtobuf() {
     document.getElementById('ProtobufOriginData').value =  document.getElementById('hexBodyout').value.replace(/\s+/g, '');
 }
+function SendBase64toHEX16() {
+    var base64Data = document.getElementById('BS64xorKEYdata').value;
+    if (base64Data) {
+        var hexData = Base64ToHex(base64Data);
+        document.getElementById('hex16xorkey').value = hexData;
+    } else {
+        showToast("请输入Base64数据");
+    }
+}
+function Base64ToHex(base64Data) {
+    var binaryData = atob(base64Data);
+    var hexData = '';
+    for (var i = 0; i < binaryData.length; i++) {
+        var charCode = binaryData.charCodeAt(i);
+        var hexChar = charCode.toString(16);
+        hexData += hexChar.padStart(2, '0');
+    }
+    return hexData;
+}
+function SendHEX16toBase64() {
+    var hexData = document.getElementById('hex16xorkey').value;
+    if (hexData) {
+        var base64Data = HexToBase64(hexData);
+        document.getElementById('BS64xorKEYdata').value = base64Data;
+    } else {
+        showToast("请输入HEX16数据");
+    }}
     </script>
 
 </body>
