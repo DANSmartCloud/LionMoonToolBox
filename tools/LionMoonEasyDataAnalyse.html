@@ -33,10 +33,21 @@ td {
   border: 1px solid #b3d4ff; /* 边框颜色调整，与蓝色主题相配 */
   text-align: left;
 }
-form {
-    display: flex;
-            justify-content: center;
-            margin-top: 1rem;
+.ui.form .fields {
+  display: flex; /* 启用Flex布局 */
+  justify-content: space-between; /* 横向间距均匀分布，如果希望元素紧挨着可以使用 'flex-start' */
+  align-items: center; /* 垂直居中对齐表单元素 */
+}
+
+/* 为了让按钮和文本区域适应容器并保持一致的宽度，可以为它们设定宽度或使用flex属性 */
+.ui.form .fields textarea,
+.ui.form .fields .ui.action.input {
+  flex: 1; /* 允许元素在可用空间中伸缩 */
+}
+
+/* 如果需要调整元素间的间距，可以为textarea或button添加外边距 */
+.ui.form .fields textarea {
+  margin-right: 10px; /* 示例间距，根据需要调整 */
 }
         * {
             box-sizing: border-box;
