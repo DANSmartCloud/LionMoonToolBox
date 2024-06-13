@@ -6,35 +6,37 @@
     <title>禾云信创-LEDA解包</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* 整个表格的样式 */
 table {
   width: 100%;
   border-collapse: collapse;
+  border-radius: 8px; /* 添加表格圆角 */
 }
 
-/* 表头的样式 */
 thead {
-  background-color: #f2f2f2;
+  background-color: #4e9aff; /* 蓝色背景表头 */
+  color: white; /* 文字白色以确保可读性 */
   font-weight: bold;
 }
 
-/* 表格主体的样式，可选，通常用于区分thead和tbody的样式 */
-tbody {}
+/* 表格主体的样式，这里可以不做特殊处理或微调以匹配整体风格 */
 
-/* 行的样式 */
 tr:nth-child(even) {
-  background-color: #f9f9f9; /* 偶数行背景色 */
+  background-color: #e6f7ff; /* 蓝色系的浅色背景，用于偶数行 */
 }
 
 tr:hover {
-  background-color: #ddd; /* 鼠标悬停行的背景色 */
+  background-color: #bcdfff; /* 鼠标悬停时的蓝色，稍深于偶数行背景 */
 }
 
-/* 单元格的样式 */
 td {
-  padding: 8px;
-  border: 1px solid #ddd;
+  padding: 12px 16px; /* 调整单元格的内边距，增加阅读舒适度 */
+  border: 1px solid #b3d4ff; /* 边框颜色调整，与蓝色主题相配 */
   text-align: left;
+}
+form {
+    display: flex;
+            justify-content: center;
+            margin-top: 1rem;
 }
         * {
             box-sizing: border-box;
@@ -240,6 +242,8 @@ td {
 .tooltip-btn:active {
     animation: floatEffect 0.2s ease-in-out;
 }
+
+
     </style>
 </head>
 <body>
